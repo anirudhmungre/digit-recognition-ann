@@ -2,98 +2,41 @@ import {RandomHelper} from "./RandomHelper";
 
 export class Perceptron {
 
-    private _theta: number;
-    private _inputSize: number;
-    private _weights: number[];
-    private _inputs: number[];
-    private _output: number;
-    private _adjustments: number[];
+    private static alpha: number = 0.1;
+    theta: number;
+    weights: number[];
+    output: number;
 
     constructor(inputSize: number = 0) {
-        this.theta = -1;
-        this.inputSize = inputSize;
-        this.weights = this.initWeights();
+        this.initializeWeights(inputSize);
     }
 
-    get theta(): number {
-        return this._theta;
-    }
-
-    set theta(theta: number) {
-        this._theta = theta;
-    }
-
-    get inputSize(): number {
-        return this._inputSize;
-    }
-
-    set inputSize(inputSize: number) {
-        this._inputSize = inputSize;
-    }
-
-    get weights(): number[] {
-        return this._weights;
-    }
-
-    set weights(weights: number[]) {
-        this._weights = weights;
-    }
-
-    get inputs(): number[] {
-        return this._inputs;
-    }
-
-    set inputs(inputs: number[]) {
-        this._inputs = inputs;
-    }
-
-    get output(): number {
-        return this._output;
-    }
-
-    set output(output: number) {
-        this._output = output;
-    }
-
-    get adjustments(): number[] {
-        return this._adjustments;
-    }
-
-    set adjustments(adjustments: number[]) {
-        this._adjustments = adjustments;
-    }
-
-    private initWeights(): number[] {
-        const maximum: number = 2.4 / this.inputSize;
+    private initializeWeights(inputSize: number): void {
+        const maximum: number = 2.4 / inputSize;
         const minimum: number = -maximum;
-        return new Array<number>(this.inputSize).fill(0).map(() => RandomHelper.randomFloat(minimum, maximum));
+        this.theta = RandomHelper.randomFloat(minimum, maximum);
+        this.weights = new Array<number>(inputSize).fill(0).map(() => RandomHelper.randomFloat(minimum, maximum));
     }
 
-    public calculateOutput(inputs: number[]): number {
-        this.inputs = inputs;
-        inputs = inputs.map((input, index) => input * this.weights[index]);
-        this.output = inputs.reduce((a, b) => a + b, 0) - this.theta;
+    public activationFunction(inputs: number[]): number {
+        this.output = 0;
+        this.weights.forEach((w: number, i: number) => {
+            this.output += (w * inputs[i]);
+        });
+        this.output -= this.theta;
         return this.output;
     }
 
-    public calculateError(expected: number) {
+    public error(expected: number) {
         return expected - this.output;
     }
 
-    public calculateOutputDelta(error: number): number {
-        return this.output * (1 - this.output) * error;
+    public deltas(inputs: number[], errorGradient: number): number[] {
+        this.theta = Perceptron.alpha * (-1) * errorGradient;
+        return this.weights.map((w: number, i: number) => Perceptron.alpha * inputs[i] * errorGradient);
     }
 
-    public calculateDelta(parentDelta: number, parentWeight: number) {
-        return this.output * (1 - this.output) * parentDelta * parentWeight;
-    }
-
-    public calculateAdjustments(errorGradient: number, learningRate: number): void {
-        this.adjustments = this.weights.map((w, index) => (learningRate * this.inputs[index] * errorGradient));
-        this.theta = learningRate * this.theta * errorGradient;
-    }
-
-    public adjustWeights(): void {
-        this.weights = this.weights.map((w, index) => w + this.adjustments[index]);
+    public applyDeltas(deltas: number[]): void {
+        this.weights = this.weights.map((w: number, i: number) => w + deltas[i]);
     }
 }

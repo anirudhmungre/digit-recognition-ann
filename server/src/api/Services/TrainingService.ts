@@ -24,23 +24,25 @@ export class TrainingService {
 
     public async trainModel(modelId: string): Promise<Model> {
         this.model = await this.modelService.getModel(modelId);
-        const inputSize: number = this.model.layers[0].perceptrons[0].inputSize;
+        const inputSize: number = this.model.layers[0].inputSize;
         let data: { input: number[], output: number[] }[] = (await this.getTrainingData(inputSize)).map(td => {
             const outputArray: number[] = Array<number>(10).fill(0);
             outputArray[td.output] = 1;
             return {input: JSON.parse(td.input), output: outputArray}
         });
         data.forEach(d => {
-            let sumOfSquaredErrors: number = 0.002;
+            let sumOfSquaredErrors: number = Infinity;
             this.model.forwardpropagation(d.input);
             while (sumOfSquaredErrors > 0.001) {
                 this.model.backpropagation(d.output);
                 this.model.forwardpropagation(d.input);
-                let errors: number[] = d.output.map((expected, index) => expected - this.model.outputs[index]);
-                sumOfSquaredErrors = 0;
-                errors.forEach(e => {
-                    sumOfSquaredErrors += Math.pow(e, 2);
-                });
+                // let errors: number[] = d.output.map((expected, index) => expected - this.model.outputs[index]);
+                // sumOfSquaredErrors = 0;
+                // errors.forEach(e => {
+                //     console.log(e);
+                //     sumOfSquaredErrors += Math.pow(e, 2);
+                // });
+                console.log(`Sum of Squared Errors: ${sumOfSquaredErrors}`);
             }
         });
         return this.model;

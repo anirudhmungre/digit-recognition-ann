@@ -2,35 +2,21 @@ import {Perceptron} from "./Perceptron";
 
 export class Layer {
 
-    private _size: number;
-    private _perceptrons: Perceptron[];
+    perceptrons: Perceptron[];
+    inputSize: number;
+    outputs: number[];
 
-    constructor(size: number = 0, inputSize: number = 0) {
-        this.size = size;
-        this.perceptrons = this.initLayer(inputSize);
+    constructor(numPerceptrons: number = 0, inputSize: number = 0) {
+        this.inputSize = inputSize;
+        this.initializeLayer(numPerceptrons, inputSize);
     }
 
-    get size(): number {
-        return this._size;
+    private initializeLayer(numPerceptrons: number, inputSize: number): void {
+        this.perceptrons = new Array<Perceptron>(numPerceptrons).fill(null).map(() => new Perceptron(inputSize));
     }
 
-    set size(size: number) {
-        this._size = size;
-    }
-
-    get perceptrons(): Perceptron[] {
-        return this._perceptrons;
-    }
-
-    set perceptrons(perceptrons: Perceptron[]) {
-        this._perceptrons = perceptrons;
-    }
-
-    private initLayer(inputSize: number): Perceptron[] {
-        return new Array<Perceptron>(this.size).fill(null).map(() => new Perceptron(inputSize));
-    }
-
-    public getOutputs(inputs: number[]): number[] {
-        return this.perceptrons.map((p: Perceptron) => p.calculateOutput(inputs));
+    public activatePerceptrons(inputs: number[]): number[] {
+        this.outputs = this.perceptrons.map(p => p.activationFunction(inputs));
+        return this.outputs;
     }
 }
