@@ -1,6 +1,6 @@
 import {Service} from "typedi";
 import {DBService} from "./DBService";
-import {Model} from "../../Classes/Old/Model";
+import {Model} from "../../Classes/Model";
 
 @Service()
 export class ModelDBService {

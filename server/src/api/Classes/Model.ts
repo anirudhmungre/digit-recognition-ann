@@ -27,6 +27,21 @@ export class Model {
     }
 
     public backpropagation(expected: number[]): void {
+        const outputWeights: number[][] = this.layers[this.layers.length-1].weights;
 
+        const errors: number[] = this.layers[this.layers.length-1].errors(expected);
+        const outputErrorGradients: number[] = this.layers[this.layers.length-1].outputErrorGradients(errors);
+        const outputDeltas: number[][] = this.layers[this.layers.length-1].outputDeltas(outputErrorGradients);
+        outputErrorGradients.forEach((oeg: number, i: number) => {
+            const hiddenGradients: number[] = this.layers[this.layers.length-2].hiddenGradients(oeg, outputWeights[i]);
+            const hiddenDeltas: number[][] = this.layers[this.layers.length-2].hiddenDeltas(hiddenGradients);
+            this.layers[this.layers.length-2].applyDeltas(hiddenDeltas);
+        });
+        this.layers[this.layers.length-1].applyDeltas(outputDeltas);
+    }
+
+    public sumOfSquaredErrors(expected: number[]): number {
+        const errors: number[] = this.layers[this.layers.length-1].errors(expected);
+        return errors.map(e => Math.pow(e, 2)).reduce((a, b) => a + b, 0);
     }
 }

@@ -31,17 +31,13 @@ export class TrainingService {
             return {input: JSON.parse(td.input), output: outputArray}
         });
         data.forEach(d => {
-            let sumOfSquaredErrors: number = Infinity;
             this.model.forwardpropagation(d.input);
+            let sumOfSquaredErrors = this.model.sumOfSquaredErrors(d.output);
             while (sumOfSquaredErrors > 0.001) {
+                // Calculate Sum of Squared Errors
                 this.model.backpropagation(d.output);
                 this.model.forwardpropagation(d.input);
-                // let errors: number[] = d.output.map((expected, index) => expected - this.model.outputs[index]);
-                // sumOfSquaredErrors = 0;
-                // errors.forEach(e => {
-                //     console.log(e);
-                //     sumOfSquaredErrors += Math.pow(e, 2);
-                // });
+                sumOfSquaredErrors = this.model.sumOfSquaredErrors(d.output);
                 console.log(`Sum of Squared Errors: ${sumOfSquaredErrors}`);
             }
         });

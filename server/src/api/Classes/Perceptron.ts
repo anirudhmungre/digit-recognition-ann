@@ -6,6 +6,7 @@ export class Perceptron {
     theta: number;
     weights: number[];
     output: number;
+    deltas: number[];
 
     constructor(inputSize: number = 0) {
         this.initializeWeights(inputSize);
@@ -23,17 +24,20 @@ export class Perceptron {
         this.weights.forEach((w: number, i: number) => {
             this.output += (w * inputs[i]);
         });
-        this.output -= this.theta;
+        this.output = 1 / (1 + Math.pow(Math.E, -(this.output-this.theta)));
         return this.output;
     }
 
-    public error(expected: number) {
-        return expected - this.output;
+    public outputDeltas(inputs: number[], errorGradient: number): number[] {
+        this.theta = Perceptron.alpha * (-1) * errorGradient;
+        this.deltas = this.weights.map((w: number, i: number) => Perceptron.alpha * inputs[i] * errorGradient);
+        return this.deltas;
     }
 
-    public deltas(inputs: number[], errorGradient: number): number[] {
+    public hiddenDeltas(inputs: number[], errorGradient: number): number[] {
         this.theta = Perceptron.alpha * (-1) * errorGradient;
-        return this.weights.map((w: number, i: number) => Perceptron.alpha * inputs[i] * errorGradient);
+        this.deltas = this.weights.map((w: number, i: number) => Perceptron.alpha * inputs[i] * errorGradient);
+        return this.deltas;
     }
 
     public applyDeltas(deltas: number[]): void {
