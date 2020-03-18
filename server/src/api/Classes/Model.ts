@@ -40,8 +40,12 @@ export class Model {
         this.layers[this.layers.length-1].applyDeltas(outputDeltas);
     }
 
-    public sumOfSquaredErrors(expected: number[]): number {
+    public error(expected: number[]): number {
         const errors: number[] = this.layers[this.layers.length-1].errors(expected);
         return errors.map(e => Math.pow(e, 2)).reduce((a, b) => a + b, 0);
+    }
+
+    public prediction(): number[] {
+        return this.layers[this.layers.length-1].outputs;
     }
 }

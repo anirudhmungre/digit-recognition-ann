@@ -19,9 +19,19 @@ export class TrainingController {
         return await this.trainingService.insertTrainingData(options.input, options.output);
     }
 
+    @Post('/reset')
+    public async resetModel(@Body() options): Promise<{model: string, success: boolean}> {
+        return await this.trainingService.resetModel(options.inputSize, options.layerSizes);
+    }
+
     @Post('/train')
-    public async trainModel(@Body() options): Promise<any> {
-        return await this.trainingService.trainModel(options.modelId);
+    public async trainModel(@Body() options): Promise<{model: string, success: boolean}> {
+        return await this.trainingService.trainModel(options.acceptedError);
+    }
+
+    @Post('/predict')
+    public async predict(@Body() options): Promise<{predictions: number[], success: boolean}> {
+        return await this.trainingService.predict(options.input);
     }
 
 }
