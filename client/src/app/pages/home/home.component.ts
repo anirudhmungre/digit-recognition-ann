@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  private input: number[];
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  inputChange(inputValues: number[]) {
+    this.input = inputValues;
+  }
 }
