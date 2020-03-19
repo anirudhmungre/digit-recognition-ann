@@ -35,10 +35,10 @@ export class Model {
 
         const errors: number[] = this.layers[this.layers.length-1].errors(expected);
         const outputErrorGradients: number[] = this.layers[this.layers.length-1].outputErrorGradients(errors);
-        const outputDeltas: number[][] = this.layers[this.layers.length-1].outputDeltas(outputErrorGradients);
+        const outputDeltas: number[][] = this.layers[this.layers.length-1].calculateDeltas(outputErrorGradients);
         outputErrorGradients.forEach((oeg: number, i: number) => {
             const hiddenGradients: number[] = this.layers[this.layers.length-2].hiddenGradients(oeg, outputWeights[i]);
-            const hiddenDeltas: number[][] = this.layers[this.layers.length-2].hiddenDeltas(hiddenGradients);
+            const hiddenDeltas: number[][] = this.layers[this.layers.length-2].calculateDeltas(hiddenGradients);
             this.layers[this.layers.length-2].applyDeltas(hiddenDeltas);
         });
         this.layers[this.layers.length-1].applyDeltas(outputDeltas);

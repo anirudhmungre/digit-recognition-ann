@@ -38,16 +38,12 @@ export class Layer {
         return this.outputs.map((o: number, i: number) => o * (1 - o) * errors[i]);
     }
 
-    public outputDeltas(errorGradients: number[]) {
-        return this.perceptrons.map((p: Perceptron, i: number) => p.outputDeltas(this.inputs, errorGradients[i]));
-    }
-
     public hiddenGradients(outputErrorGradient: number, outputWeights: number[]): number[] {
         return this.perceptrons.map((p: Perceptron, i: number) => p.output * (1 - p.output) * outputErrorGradient * outputWeights[i]);
     }
 
-    public hiddenDeltas(errorGradients: number[]) {
-        return this.perceptrons.map((p: Perceptron, i: number) => p.hiddenDeltas(this.inputs, errorGradients[i]));
+    public calculateDeltas(errorGradients: number[]) {
+        return this.perceptrons.map((p: Perceptron, i: number) => p.calculateDeltas(this.inputs, errorGradients[i]));
     }
 
     public applyDeltas(deltas: number[][]): void {

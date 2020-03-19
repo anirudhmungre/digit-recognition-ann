@@ -28,13 +28,7 @@ export class Perceptron {
         return this.output;
     }
 
-    public outputDeltas(inputs: number[], errorGradient: number): number[] {
-        this.theta = Perceptron.alpha * (-1) * errorGradient;
-        this.deltas = this.weights.map((w: number, i: number) => Perceptron.alpha * inputs[i] * errorGradient);
-        return this.deltas;
-    }
-
-    public hiddenDeltas(inputs: number[], errorGradient: number): number[] {
+    public calculateDeltas(inputs: number[], errorGradient: number): number[] {
         this.theta = Perceptron.alpha * (-1) * errorGradient;
         this.deltas = this.weights.map((w: number, i: number) => Perceptron.alpha * inputs[i] * errorGradient);
         return this.deltas;
