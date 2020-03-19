@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import {Body, Get, JsonController, Post} from 'routing-controllers';
 import {TrainingService} from "../Services/TrainingService";
+import {Model} from "../Classes/Model";
 
 @JsonController('/training')
 export class TrainingController {
@@ -20,12 +21,12 @@ export class TrainingController {
     }
 
     @Post('/reset')
-    public async resetModel(@Body() options): Promise<{model: string, success: boolean}> {
+    public async resetModel(@Body() options): Promise<{model: Model, success: boolean}> {
         return await this.trainingService.resetModel(options.inputSize, options.layerSizes);
     }
 
     @Post('/train')
-    public async trainModel(@Body() options): Promise<{model: string, success: boolean}> {
+    public async trainModel(@Body() options): Promise<{model: Model, success: boolean}> {
         return await this.trainingService.trainModel(options.acceptedError);
     }
 

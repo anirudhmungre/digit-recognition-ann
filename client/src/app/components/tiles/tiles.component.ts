@@ -17,6 +17,7 @@ export class TilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.input = new Array<number>(this.dimensions.x * this.dimensions.y).fill(0);
+    this.inputChange.emit(this.input);
   }
 
   Array(size: number) {

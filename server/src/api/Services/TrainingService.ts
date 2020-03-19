@@ -20,15 +20,15 @@ export class TrainingService {
         return await this.trainingDBService.getTrainingData(inputSize);
     }
 
-    public async resetModel(inputSize: number, layerSizes: number[]): Promise<{model: string, success: boolean}> {
+    public async resetModel(inputSize: number, layerSizes: number[]): Promise<{model: Model, success: boolean}> {
         this.model = new Model(inputSize, layerSizes);
-        return {model: JSON.stringify(this.model), success: true};
+        return {model: this.model, success: true};
     }
 
-    public async trainModel(acceptedError: number): Promise<{model: string, success: boolean}> {
+    public async trainModel(acceptedError: number): Promise<{model: Model, success: boolean}> {
         // this.model = await this.modelService.getModel(modelId);
         if (!this.model) {
-            return {model: "", success: false};
+            return {model: null, success: false};
         }
         const inputSize: number = this.model.layers[0].inputSize;
         let data: { input: number[], output: number[] }[] = (await this.getTrainingData(inputSize)).map(td => {
@@ -44,15 +44,15 @@ export class TrainingService {
                 sumOfSquaredErrors += Math.pow(this.model.error(d.output), 2);
                 this.model.backpropagation(d.output);
             });
-            console.log(`Sum of Squared Errors: ${sumOfSquaredErrors}`);
+            // console.log(`Sum of Squared Errors: ${sumOfSquaredErrors}`);
         }
 
         data.forEach(d => {
             this.model.forwardpropagation(d.input);
-            console.log(`EXPECTED: ${d.output.indexOf(1)}`);
-            console.log(`PREDICTED: ${this.model.prediction()}\n`);
+            // console.log(`EXPECTED: ${d.output.indexOf(1)}`);
+            // console.log(`PREDICTED: ${this.model.prediction()}\n`);
         });
-        return {model: JSON.stringify(this.model), success: true};
+        return {model: this.model, success: true};
     }
 
     public async predict(input: number[]): Promise<{predictions: number[], success: boolean}> {

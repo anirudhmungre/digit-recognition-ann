@@ -1,6 +1,14 @@
 <mat-card>
-  <app-tiles
-    [dimensions]="{x: 5, y: 9}"
-    (inputChange)="inputChange($event)"
-  ></app-tiles>
+  <mat-card-header>
+    <mat-card-title>Prediction: {{ prediction }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-tiles
+      [dimensions]="dimensions"
+      (inputChange)="inputChange($event)"
+    ></app-tiles>
+  </mat-card-content>
 </mat-card>
+<button mat-flat-button (click)="resetModel()" color="warn">RESET MODEL</button>
+<button mat-flat-button (click)="trainModel()" color="accent">TRAIN MODEL</button>
+<button mat-flat-button (click)="testModel()" color="primary">MAKE PREDICTION</button>
