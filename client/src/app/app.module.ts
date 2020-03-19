@@ -11,6 +11,9 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { LoaderComponent } from './components/shared/loader/loader.component';
 import {LoaderService} from './services/loader.service';
 import {LoaderInterceptor} from './interceptors/loader.interceptor';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
 
 @NgModule({
   declarations: [
@@ -24,6 +27,7 @@ import {LoaderInterceptor} from './interceptors/loader.interceptor';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialDesignModule,
+    SocketIoModule.forRoot(config),
     HttpClientModule
   ],
   providers: [
