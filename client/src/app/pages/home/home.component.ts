@@ -1,65 +1,89 @@
-import { Component, OnInit } from '@angular/core';
-import {ModelService} from '../../services/model.service';
-import {Model} from '../../types/Model';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, OnInit } from "@angular/core";
+import {NeuralNetService} from "../../services/neural-net.service";
+import {Subscription} from "rxjs";
+import {Epoch} from "../../types/training";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"]
 })
 export class HomeComponent implements OnInit {
 
-  prediction: number;
+  readonly inf: number;
+  paused: boolean;
+  private subscription: Subscription;
   dimensions: {x: number, y: number};
-  private input: number[];
-  model: Model;
+  epochs: Array<Epoch>;
+  prediction: number;
+  confidence: number;
 
-  constructor(
-    private modelService: ModelService,
-    private snackBar: MatSnackBar
-    ) {
+  constructor(private neuralNetService: NeuralNetService) {
+    this.inf = Infinity;
     this.dimensions = {x: 5, y: 9};
+    this.reset();
   }
 
   ngOnInit(): void {
-  }
-
-  openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 2000,
+    this.neuralNetService.confirmation.subscribe(data => {
+      if (data.success) {
+        console.log("Connected to socket!");
+      } else {
+        console.log("Something went wrong when connecting to socket!");
+      }
+    });
+    this.neuralNetService.prediction.subscribe(data => {
+      if (data) {
+        const sum: number = data.reduce((a: number, b: number) => a + b, 0);
+        const maxPredicted: number = Math.max(...data);
+        this.prediction = data.indexOf(maxPredicted);
+        this.confidence = maxPredicted / sum;
+      }
     });
   }
 
-  inputChange(inputValues: number[]) {
-    this.input = inputValues;
-    this.testModel();
+  private reset(): void {
+    this.epochs = [];
+    this.paused = true;
+    this.prediction = Infinity;
+    this.confidence = Infinity;
+  }
+
+  get isSubscribed(): boolean {
+    if (!this.subscription) {
+      return false;
+    }
+    return !this.subscription.closed;
   }
 
   resetModel() {
-    this.modelService.resetModel(45, [5, 10]).subscribe(data => {
-      if (data.success) {
-        this.model = data.model;
-        this.openSnackBar('The model has been reset!', 'dismiss');
-      }
-    });
+    this.reset();
+    this.subscription.unsubscribe();
+    this.neuralNetService.disconnect();
   }
 
-  trainModel() {
-    this.modelService.trainModel(0.001).subscribe(data => {
+  trainNetwork() {
+    this.paused = false;
+    this.neuralNetService.connect();
+    this.subscription = this.neuralNetService.epoch.subscribe(data => {
+      // HANDLE EPOCHS HERE
       if (data.success) {
-        this.model = data.model;
-        this.openSnackBar('The model has been trained!', 'dismiss');
+        this.epochs.push(data.data);
+      } else {
+        console.log("Getting an issue with retrieving data.");
       }
     });
+    console.log(`Starting training with input size ${this.dimensions.x * this.dimensions.y}`);
+    this.neuralNetService.train(this.dimensions.x * this.dimensions.y, [5, 10]);
   }
 
-  testModel() {
-    this.modelService.testModel(this.input).subscribe(data => {
-      if (data.success) {
-        const maxCertain: number = Math.max(...data.predictions);
-        this.prediction = data.predictions.indexOf(maxCertain);
-      }
-    });
+  pauseTraining(): void {
+    this.paused = true;
+    this.subscription.unsubscribe();
+    this.neuralNetService.pauseTraining();
+  }
+
+  numpadChanged(inputs: Array<number>) {
+    this.neuralNetService.predict(inputs);
   }
 }

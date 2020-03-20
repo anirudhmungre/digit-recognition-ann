@@ -1,34 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es2015",
     "module": "commonjs",
-    "pretty": true,
-    "emitBOM": true,
+    "esModuleInterop": false,
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "importHelpers": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
     "baseUrl": ".",
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "lib": [
-      "es2017",
-      "esnext.array"
-    ]
+    "paths": {
+      "*": [
+        "node_modules/",
+        "src/types/*"
+      ]
+    }
   },
-  "exclude": [
-    "node_modules"
+  "include": [
+    "src/**/*"
   ]
 }

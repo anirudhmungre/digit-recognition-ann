@@ -1,0 +1,10 @@
+<mat-card>
+  <div class="row" *ngFor="let x of createArraySize(dimensions.y); let i = index;">
+    <button mat-raised-button
+            class="pad"
+            color="{{ inputs[(dimensions.x * i) + j] ? 'accent' : 'primary' }}"
+            value="{{ (dimensions.x * i) + j }}"
+            *ngFor="let y of createArraySize(dimensions.x); let j = index;"
+            (click)="flipPad($event.target)"></button>
+  </div>
+</mat-card>

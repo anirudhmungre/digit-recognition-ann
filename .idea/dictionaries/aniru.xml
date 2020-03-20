@@ -2,6 +2,7 @@
   <dictionary name="aniru">
     <words>
       <w>backpropagation</w>
+      <w>dotenv</w>
       <w>forwardpropagation</w>
       <w>middlewares</w>
       <w>perceptron</w>

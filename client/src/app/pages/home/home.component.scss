@@ -1,13 +1,12 @@
-:host {
+.container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-}
-
-.mat-card {
-  margin: 10px;
+  width: 100%;
 }
 
 .mat-flat-button {
-  width: 335px;
+  width: calc(30vh + 32px);
+  //padding: 16px;
 }

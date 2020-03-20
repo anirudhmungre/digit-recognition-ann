@@ -1,14 +1,10 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Prediction: {{ prediction }}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <app-tiles
-      [dimensions]="dimensions"
-      (inputChange)="inputChange($event)"
-    ></app-tiles>
-  </mat-card-content>
-</mat-card>
-<button mat-flat-button (click)="resetModel()" color="warn">RESET MODEL</button>
-<button mat-flat-button (click)="trainModel()" color="accent">TRAIN MODEL</button>
-<button mat-flat-button (click)="testModel()" color="primary">MAKE PREDICTION</button>
+<div class="container">
+  <app-numpad [dimensions]="dimensions" (inputChange)="numpadChanged($event)"></app-numpad>
+  <button mat-flat-button color="primary" (click)="trainNetwork()" *ngIf="paused; else stop">Train Network</button>
+  <ng-template #stop><button mat-flat-button color="accent" (click)="pauseTraining()"> Pause Training </button></ng-template>
+  <button mat-flat-button color="warn" (click)="resetModel()"> Reset Model </button>
+  <app-statistics
+    [prediction]="prediction"
+    [confidence]="confidence"
+    [sumOfSquaredErrors]="epochs.length > 0 ? epochs[epochs.length - 1].sumOfSquaredErrors : inf"></app-statistics>
+</div>
