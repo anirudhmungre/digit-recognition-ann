@@ -1,0 +1,26 @@
+import {Component, Input, OnInit} from "@angular/core";
+
+@Component({
+  selector: "app-numpad",
+  templateUrl: "./numpad.component.html",
+  styleUrls: ["./numpad.component.scss"]
+})
+export class NumpadComponent implements OnInit {
+
+  @Input() dimensions: {x: number, y: number};
+  inputs: Array<number>;
+
+  constructor() { }
+
+  ngOnInit(): void {
+    this.inputs = new Array<number>(this.dimensions.x * this.dimensions.y).fill(0);
+  }
+
+  createArraySize(size: number): Array<number> {
+    return new Array<number>(size);
+  }
+
+  flipPad(target: any) {
+    this.inputs[target.value] = this.inputs[target.value] === 0 ? 1 : 0;
+  }
+}

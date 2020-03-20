@@ -10,26 +10,27 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const models: any = {};
+const training: any = {};
 
 io.on("connection", (socket: Socket) => {
     console.log(`A new client connected. ID: ${socket.id}`);
     socket.emit('connected', { success: true });
-    let training: number;
-    socket.on('train', (inputSize: number, layerSizes: Array<number>) => {
+
+    socket.on('train', ({inputSize, layerSizes}) => {
         console.log(`Client ${socket.id} requesting training of model with input size ${inputSize}`);
         console.log('Starting model training...');
         if (!models[socket.id]) {
             models[socket.id] = new Model(inputSize, layerSizes);
         }
-        training = setInterval(() => {
-            socket.emit('epoch', {});
+        training[socket.id] = setInterval(() => {
+            socket.emit('epoch', {data: {sumOfSquaredErrors: 5}, success: true});
         });
     });
 
     socket.on('disconnect', () => {
-        if (training) {
+        if (training[socket.id]) {
             console.log('Stopping training...');
-            clearInterval(training);
+            clearInterval(training[socket.id]);
         }
         delete models[socket.id];
         console.log(`A client disconnected. ID: ${socket.id}`);

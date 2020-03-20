@@ -1,0 +1,6 @@
+<div class="container">
+  <app-numpad [dimensions]="dimensions"></app-numpad>
+  <button mat-flat-button color="primary" (click)="trainNetwork()" *ngIf="!isSubscribed; else stop">Train Network</button>
+  <ng-template #stop><button mat-flat-button color="warn" (click)="stopSubscription()"> Stop Training </button></ng-template>
+  <h1 *ngIf="epochs.length > 0">{{ epochs[epochs.length - 1].sumOfSquaredErrors }}</h1>
+</div>
