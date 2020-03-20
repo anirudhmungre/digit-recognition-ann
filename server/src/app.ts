@@ -61,7 +61,7 @@ io.on("connection", (socket: Socket) => {
 
     socket.on('pause', () => {
         if (training[socket.id]) {
-            console.log(`A client paused the training. ID: ${socket.id}`);
+            console.log(`Client paused ${socket.id} the training.`);
             console.log('Pausing training...');
             clearInterval(training[socket.id]);
         }
