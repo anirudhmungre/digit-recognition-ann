@@ -7,4 +7,7 @@
     [prediction]="prediction"
     [confidence]="confidence"
     [sumOfSquaredErrors]="epochs.length > 0 ? epochs[epochs.length - 1].sumOfSquaredErrors : inf"></app-statistics>
+  <app-network-diagram
+    *ngIf="epochs.length > 0"
+    [model]="epochs[epochs.length - 1].model"></app-network-diagram>
 </div>
