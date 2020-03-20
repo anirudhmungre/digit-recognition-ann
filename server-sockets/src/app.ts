@@ -56,7 +56,7 @@ io.on("connection", (socket: Socket) => {
                 success: true
             };
             socket.emit('epoch', data);
-        }, 0);
+        });
     });
 
     socket.on('pause', () => {

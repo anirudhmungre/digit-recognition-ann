@@ -79,6 +79,7 @@ export class HomeComponent implements OnInit {
 
   pauseTraining(): void {
     this.paused = true;
+    this.subscription.unsubscribe();
     this.neuralNetService.pauseTraining();
   }
 
