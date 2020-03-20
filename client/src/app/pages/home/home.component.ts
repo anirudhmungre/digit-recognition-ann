@@ -10,11 +10,13 @@ import {Epoch} from "../../types/training";
 })
 export class HomeComponent implements OnInit {
 
+  paused: boolean;
   private subscription: Subscription;
   dimensions: {x: number, y: number};
   epochs: Array<Epoch>;
 
   constructor(private neuralNetService: NeuralNetService) {
+    this.paused = true;
     this.dimensions = {x: 5, y: 9};
     this.epochs = [];
   }
@@ -27,6 +29,13 @@ export class HomeComponent implements OnInit {
         console.log("Something went wrong when connecting to socket!");
       }
     });
+    this.neuralNetService.prediction.subscribe(data => {
+      if (data) {
+        const maxPredicted: number = Math.max(...data);
+        const prediction: number = data.indexOf(maxPredicted);
+        console.log(`Predicted: ${prediction}`);
+      }
+    });
   }
 
   get isSubscribed(): boolean {
@@ -36,12 +45,15 @@ export class HomeComponent implements OnInit {
     return !this.subscription.closed;
   }
 
-  stopSubscription() {
+  resetModel() {
+    this.epochs = [];
+    this.paused = true;
     this.subscription.unsubscribe();
     this.neuralNetService.disconnect();
   }
 
   trainNetwork() {
+    this.paused = false;
     this.neuralNetService.connect();
     this.subscription = this.neuralNetService.epoch.subscribe(data => {
       // HANDLE EPOCHS HERE
@@ -53,5 +65,14 @@ export class HomeComponent implements OnInit {
     });
     console.log(`Starting training with input size ${this.dimensions.x * this.dimensions.y}`);
     this.neuralNetService.train(this.dimensions.x * this.dimensions.y, [5, 10]);
+  }
+
+  pauseTraining(): void {
+    this.paused = true;
+    this.neuralNetService.pauseTraining();
+  }
+
+  numpadChanged(inputs: Array<number>) {
+    this.neuralNetService.predict(inputs);
   }
 }

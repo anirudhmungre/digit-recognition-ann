@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 
 @Component({
   selector: "app-numpad",
@@ -8,9 +8,12 @@ import {Component, Input, OnInit} from "@angular/core";
 export class NumpadComponent implements OnInit {
 
   @Input() dimensions: {x: number, y: number};
+  @Output() inputChange: EventEmitter<Array<number>>;
   inputs: Array<number>;
 
-  constructor() { }
+  constructor() {
+    this.inputChange = new EventEmitter<Array<number>>();
+  }
 
   ngOnInit(): void {
     this.inputs = new Array<number>(this.dimensions.x * this.dimensions.y).fill(0);
@@ -22,5 +25,6 @@ export class NumpadComponent implements OnInit {
 
   flipPad(target: any) {
     this.inputs[target.value] = this.inputs[target.value] === 0 ? 1 : 0;
+    this.inputChange.emit(this.inputs);
   }
 }
