@@ -3,5 +3,8 @@
   <button mat-flat-button color="primary" (click)="trainNetwork()" *ngIf="paused; else stop">Train Network</button>
   <ng-template #stop><button mat-flat-button color="accent" (click)="pauseTraining()"> Pause Training </button></ng-template>
   <button mat-flat-button color="warn" (click)="resetModel()"> Reset Model </button>
-  <h1 *ngIf="epochs.length > 0">{{ epochs[epochs.length - 1].sumOfSquaredErrors }}</h1>
+  <app-statistics
+    [prediction]="prediction"
+    [confidence]="confidence"
+    [sumOfSquaredErrors]="epochs.length > 0 ? epochs[epochs.length - 1].sumOfSquaredErrors : inf"></app-statistics>
 </div>

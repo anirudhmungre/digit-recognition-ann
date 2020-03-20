@@ -10,15 +10,18 @@ import {Epoch} from "../../types/training";
 })
 export class HomeComponent implements OnInit {
 
+  readonly inf: number;
   paused: boolean;
   private subscription: Subscription;
   dimensions: {x: number, y: number};
   epochs: Array<Epoch>;
+  prediction: number;
+  confidence: number;
 
   constructor(private neuralNetService: NeuralNetService) {
-    this.paused = true;
+    this.inf = Infinity;
     this.dimensions = {x: 5, y: 9};
-    this.epochs = [];
+    this.reset();
   }
 
   ngOnInit(): void {
@@ -31,11 +34,19 @@ export class HomeComponent implements OnInit {
     });
     this.neuralNetService.prediction.subscribe(data => {
       if (data) {
+        const sum: number = data.reduce((a: number, b: number) => a + b, 0);
         const maxPredicted: number = Math.max(...data);
-        const prediction: number = data.indexOf(maxPredicted);
-        console.log(`Predicted: ${prediction}`);
+        this.prediction = data.indexOf(maxPredicted);
+        this.confidence = maxPredicted / sum;
       }
     });
+  }
+
+  private reset(): void {
+    this.epochs = [];
+    this.paused = true;
+    this.prediction = Infinity;
+    this.confidence = Infinity;
   }
 
   get isSubscribed(): boolean {
@@ -46,8 +57,7 @@ export class HomeComponent implements OnInit {
   }
 
   resetModel() {
-    this.epochs = [];
-    this.paused = true;
+    this.reset();
     this.subscription.unsubscribe();
     this.neuralNetService.disconnect();
   }

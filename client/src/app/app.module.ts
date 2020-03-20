@@ -8,6 +8,7 @@ import {MaterialDesignModule} from "./material-design/material-design.module";
 import { HomeComponent } from "./pages/home/home.component";
 import { NumpadComponent } from "./components/numpad/numpad.component";
 import { SocketIoModule, SocketIoConfig } from "ngx-socket-io";
+import { StatisticsComponent } from "./components/statistics/statistics.component";
 
 const config: SocketIoConfig = { url: "http://localhost:5000", options: {} };
 
@@ -15,7 +16,8 @@ const config: SocketIoConfig = { url: "http://localhost:5000", options: {} };
   declarations: [
     AppComponent,
     HomeComponent,
-    NumpadComponent
+    NumpadComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,

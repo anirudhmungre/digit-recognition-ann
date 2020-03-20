@@ -1,0 +1,19 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Model Statistics</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="stat">
+      <p> Prediction: </p>
+      <p> {{ prediction }} </p>
+    </div>
+    <div class="stat">
+      <p> Confidence: </p>
+      <p> {{ confidence | percent }} </p>
+    </div>
+    <div class="stat">
+      <p> Sum of Squared Errors: </p>
+      <p> {{ sumOfSquaredErrors }} </p>
+    </div>
+  </mat-card-content>
+</mat-card>
