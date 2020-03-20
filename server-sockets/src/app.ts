@@ -1,8 +1,11 @@
 import * as express from 'express';
 import {Socket} from 'socket.io';
 import {Model} from "./classes/Model";
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.APP_PORT || 5000;
 const app = express();
 app.set('port', PORT);
 
@@ -24,7 +27,7 @@ io.on("connection", (socket: Socket) => {
         }
         training[socket.id] = setInterval(() => {
             socket.emit('epoch', {data: {sumOfSquaredErrors: 5}, success: true});
-        });
+        }, 0);
     });
 
     socket.on('disconnect', () => {
