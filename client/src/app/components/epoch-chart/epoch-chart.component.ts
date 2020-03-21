@@ -20,7 +20,7 @@ export class EpochChartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscription = this.neuralNetService.epoch.subscribe(data => {
+    this.neuralNetService.epoch.subscribe(data => {
       // HANDLE EPOCHS HERE
       if (data.success) {
         this.epochs.push(data.data);
