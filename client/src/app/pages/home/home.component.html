@@ -7,4 +7,5 @@
     [prediction]="prediction"
     [confidence]="confidence"
     [sumOfSquaredErrors]="epochs.length > 0 ? epochs[epochs.length - 1].sumOfSquaredErrors : inf"></app-statistics>
+  <app-epoch-chart [paused]="paused"></app-epoch-chart>
 </div>
